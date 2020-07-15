@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv(r'C:\Users\josep\Documents\test_timetable.csv')
+df = pd.read_csv(r'C:/Users/josep/Documents/test_timetable.csv')
 
 days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -30,19 +30,62 @@ def green_and_red(val):
         return 'color: %s' % color
     
 #df = df.style.applymap(green_and_red)
+#counts the number of revision slots in a day
+#revision_slots = []
+#for n in range(7):
+#    counter = 0
+#    for elem in df.iloc[:, n]:
+#        if elem == 'Y':
+#            pass
+#        elif elem == 'X':
+#            pass
+#        else:
+#            counter += 1
+#    revision_slots.append(counter)
+#print(revision_slots)
 
-day1_sessions = []
-day1_reviews = []
+##counts the number of free slots in a day
+#free_slots = []
+#for n in range(7):
+#    counter = 0
+#    for elem in df.iloc[:, n]:
+#        if elem == 'Y':
+#            counter += 1
+#        else:
+#            pass
+#    free_slots.append(counter)
+#print(free_slots)
 
-i=0
-for j in range(9):
-        if len(df.iloc[j,i]) > 1:
-            day1_sessions.append(df.iloc[j,i])
-print(day1_sessions)
+    #creates initial review list for just Monday
+review_list = []
 
-for i in day1_sessions:
-    day1_reviews.append(str(i) + ' review')
-print(day1_reviews)
+for elem in df.iloc[:, 0]:
+    if len(elem) > 2:
+        review = elem + ' review ' + df.columns[0] 
+        review_list.append(review)
+        
+i = 1
+for j in range(15):
+    if len(review_list) > 0:
+        if df.iat[j, i] == 'Y':
+            df.iat[j, i] = review_list[0]
+            review_list.pop(0)
+    else:
+        pass
 
-#def first_review():
-#    for i in day1_reviews:
+#creates review_list for all days apart from inital day (due to review sessions having been injected)
+for i in range(1, 6):
+    for elem in df.iloc[:, i]:
+        if len(elem) == 1 or 'review' in elem:
+            pass
+        else:
+            review = elem + ' review ' + df.columns[i] 
+            review_list.append(review)
+        p = i + 1
+        for j in range(15):
+            if len(review_list) > 0:
+                if df.iat[j, p] == 'Y':
+                    df.iat[j, p] = review_list[0]
+                    review_list.pop(0)
+            else:
+                pass
